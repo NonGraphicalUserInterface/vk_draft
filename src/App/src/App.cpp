@@ -1,7 +1,6 @@
 #include "App.hpp"
 
 void App::run() {
-	window_.init();
 	initVulkan();
 	mainLoop();
 	cleanup();
@@ -18,5 +17,4 @@ void App::mainLoop() {
 }
 
 void App::cleanup() {
-	window_.cleanup();
 }

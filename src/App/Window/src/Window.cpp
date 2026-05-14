@@ -1,6 +1,6 @@
 #include "Window.hpp"
 
-void Window::init() {
+Window::Window() {
 	glfwInit();
 
 	glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
@@ -9,7 +9,7 @@ void Window::init() {
 	window_ = glfwCreateWindow(WIDTH, HEIGHT, "Vulkan Window", nullptr, nullptr);
 }
 
-void Window::cleanup() {
+Window::~Window() {
 	glfwDestroyWindow(window_);
 	glfwTerminate();
 }

@@ -1,5 +1,5 @@
 #include <iostream>
-#include "App/App.hpp"
+#include <App/App.hpp>
 
 int main() {
 	App app;

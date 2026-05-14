@@ -1,4 +1,6 @@
-#include "Window/Window.hpp"
+#include "Window.hpp"
+
+#include <VkCore/Instance.hpp>
 
 class App {
 public:
@@ -18,4 +20,5 @@ private:
 	void cleanup();
 
 	Window window_;
+	Instance instance_;
 };

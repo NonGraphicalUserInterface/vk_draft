@@ -1,9 +1,11 @@
 add_library(Window
-	"Window.cpp"
+	src/Window.cpp
+
+	include/Window.hpp
 )
 
 target_include_directories(Window PUBLIC
-	${CMAKE_CURRENT_SOURCE_DIR}
+	include
 )
 
 target_link_libraries(Window PUBLIC

@@ -9,7 +9,8 @@ find_package(Vulkan REQUIRED)
 
 # Include sub-projects.
 add_subdirectory(third_party)
-add_subdirectory (src/App)
+add_subdirectory(src/VkCore)
+add_subdirectory(src/App)
 
 add_executable (vk_draft
 	"src/main.cpp"
