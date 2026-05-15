@@ -2,7 +2,7 @@
 #include <App/App.hpp>
 
 int main() {
-	App app;
+	App::App app;
 
 	try {
 		std::cout << "running" << std::endl;

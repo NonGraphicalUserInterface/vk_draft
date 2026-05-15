@@ -3,22 +3,21 @@
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
 
-const uint32_t WIDTH = 800;
-const uint32_t HEIGHT = 600;
+namespace App {
+	class Window {
+	public:
+		Window();
+		~Window();
 
-class Window {
-public:
-	Window();
-	~Window();
+		Window(const Window&) = delete;
+		Window& operator=(const Window&) = delete;
+		Window(Window&&) = delete;
+		Window& operator=(Window&&) = delete;
 
-	Window(const Window&) = delete;
-	Window& operator=(const Window&) = delete;
-	Window(Window&&) = delete;
-	Window& operator=(Window&&) = delete;
-
-	// Methods
-	inline bool shouldClose() const { return glfwWindowShouldClose(window_); }
-	inline void pollEvents() const { glfwPollEvents(); }
-private:
-	GLFWwindow* window_;
-};
+		// Methods
+		inline bool shouldClose() const { return glfwWindowShouldClose(window_); }
+		inline void pollEvents() const { glfwPollEvents(); }
+	private:
+		GLFWwindow* window_;
+	};
+}

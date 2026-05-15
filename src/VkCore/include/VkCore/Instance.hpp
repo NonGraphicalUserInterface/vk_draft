@@ -6,10 +6,12 @@
 
 #include <vector>
 
-class Instance {
-public:
-	Instance();
-	~Instance();
-private:
-	VkInstance instance_ = nullptr;
-};
+namespace VkCore {
+	class Instance {
+	public:
+		Instance();
+		~Instance();
+	private:
+		VkInstance instance_ = nullptr;
+	};
+}
