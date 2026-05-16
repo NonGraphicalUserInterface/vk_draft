@@ -4,7 +4,8 @@ add_library(VkCore
 
 	# Header
 	include/VkCore/Context.hpp
- )
+	include/VkCore/Queue.hpp
+  "src/Queue.cpp")
 
 target_include_directories(VkCore PUBLIC
 	include

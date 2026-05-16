@@ -2,15 +2,19 @@
 
 #include <stdexcept>
 #include <iostream>
+#include <cstdint>
 
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
+
+#include "Queue.hpp"
 
 namespace VkCore {
 	Context::Context(const Config::Config* config) : config_(config) {
 		createInstance();
 		createDebugMessenger();
 		pickPhysicalDevice();
+		createDevice();
 	}
 
 	Context::~Context() {
@@ -19,18 +23,23 @@ namespace VkCore {
 
 	// Moving
 	Context::Context(Context&& other) noexcept :
-		config_(std::exchange(other.config_, nullptr)),
-		instance_(std::exchange(other.instance_, VK_NULL_HANDLE)),
-		debugMessenger_(std::exchange(other.debugMessenger_, VK_NULL_HANDLE)) {}
+		config_			(std::exchange(other.config_,			nullptr)),
+		instance_		(std::exchange(other.instance_,			VK_NULL_HANDLE)),
+		debugMessenger_	(std::exchange(other.debugMessenger_,	VK_NULL_HANDLE)),
+		physicalDevice_	(std::exchange(other.physicalDevice_,	VK_NULL_HANDLE)),
+		device_			(std::exchange(other.device_,			VK_NULL_HANDLE))
+	{}
 
 	Context& Context::operator=(Context&& other) noexcept {
 		if (this == &other) return *this;
 
 		cleanup();
 
-		config_ = std::exchange(other.config_, nullptr);
-		instance_ = std::exchange(other.instance_, VK_NULL_HANDLE);
-		debugMessenger_ = std::exchange(other.debugMessenger_, VK_NULL_HANDLE);
+		config_ =			std::exchange(other.config_,			nullptr);
+		instance_ =			std::exchange(other.instance_,			VK_NULL_HANDLE);
+		debugMessenger_ =	std::exchange(other.debugMessenger_,	VK_NULL_HANDLE);
+		physicalDevice_ =	std::exchange(other.physicalDevice_,	VK_NULL_HANDLE);
+		device_ =			std::exchange(other.device_,			VK_NULL_HANDLE);
 
 		return *this;
 	}
@@ -206,11 +215,89 @@ namespace VkCore {
 
 	/* PHYSICAL DEVICE */
 	void Context::pickPhysicalDevice() {
+		uint32_t deviceCount = 0;
+		vkEnumeratePhysicalDevices(instance_, &deviceCount, nullptr);
+		if (deviceCount == 0) {
+			throw std::runtime_error("Failed to find GPUs with Vulkan support!");
+		}
+
+		std::vector<VkPhysicalDevice> devices(deviceCount);
+		vkEnumeratePhysicalDevices(instance_, &deviceCount, devices.data());
+
+		for (const VkPhysicalDevice& device : devices) {
+			if (isDeviceSuitable(device)) {
+				physicalDevice_ = device;
+				break;
+			}
+		}
+
+		if (physicalDevice_ == VK_NULL_HANDLE) {
+			throw std::runtime_error("Failed to find a suitable GPU!");
+		}
+	}
+
+	bool Context::isDeviceSuitable(VkPhysicalDevice device) {
+		//// Properties: what IS device? Features: what HAS device?
+		//VkPhysicalDeviceProperties deviceProperties;
+		//VkPhysicalDeviceFeatures deviceFeatures;
+		//vkGetPhysicalDeviceProperties(device, &deviceProperties);
+		//vkGetPhysicalDeviceFeatures(device, &deviceFeatures);
+
+		//return true; // For now, Vulkan support is enough.
 		
+		return findQueueFamilies(device).isComplete();
+	}
+
+	/* LOGICAL DEVICE */
+	void Context::createDevice() {
+		// Logical device needs to know what queue families it can use
+		QueueFamilyIndices indices = findQueueFamilies(physicalDevice_);
+
+		VkDeviceQueueCreateInfo queueCreateInfo{};
+		queueCreateInfo.sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
+		queueCreateInfo.queueFamilyIndex = indices.graphicsFamily.value();
+		queueCreateInfo.queueCount = 1;
+
+		float queuePriority = 1.0f;
+		queueCreateInfo.pQueuePriorities = &queuePriority;
+
+		// We will come back to device features later
+		VkPhysicalDeviceFeatures deviceFeatures{};
+
+		VkDeviceCreateInfo createInfo{};
+		createInfo.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
+		createInfo.pQueueCreateInfos = &queueCreateInfo;
+		createInfo.queueCreateInfoCount = 1;
+		createInfo.pEnabledFeatures = &deviceFeatures;
+
+		// Previous implementations distinguished between instance- and device-specific validation layers, so this is for compatibility
+		if (config_->enableValidationLayers) {
+			createInfo.enabledLayerCount = static_cast<uint32_t>(config_->validationLayers.size());
+			createInfo.ppEnabledLayerNames = config_->validationLayers.data();
+		}
+		else {
+			createInfo.enabledLayerCount = 0;
+		}
+
+		// Create device
+		if (vkCreateDevice(physicalDevice_, &createInfo, nullptr, &device_) != VK_SUCCESS) {
+			throw std::runtime_error("Failed to create logical device!");
+		}
+
+		// Queue
+		vkGetDeviceQueue(device_, indices.graphicsFamily.value(), 0, &graphicsQueue_);
+	}
+
+	void Context::destroyDevice() {
+		if (device_ != VK_NULL_HANDLE) {
+			vkDestroyDevice(device_, nullptr);
+			device_ = VK_NULL_HANDLE;
+		}
 	}
 
 	/* GENERAL */
 	void Context::cleanup() {
+		destroyDevice();
 		destroyDebugMessenger();
 		destroyInstance();
 	}

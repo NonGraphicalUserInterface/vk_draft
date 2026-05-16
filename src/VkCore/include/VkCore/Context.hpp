@@ -4,6 +4,8 @@
 
 #include <vulkan/vulkan.h>
 
+#include <vector>
+
 
 namespace VkCore {
 	class Context {
@@ -50,7 +52,13 @@ namespace VkCore {
 		/* PHYSICAL DEVICE */
 		VkPhysicalDevice physicalDevice_ = VK_NULL_HANDLE;
 		void pickPhysicalDevice();
+		bool isDeviceSuitable(VkPhysicalDevice device);
 
+		/* LOGICAL DEVICE */
+		VkDevice device_ = VK_NULL_HANDLE;
+		VkQueue graphicsQueue_ = VK_NULL_HANDLE;
+		void createDevice();
+		void destroyDevice();
 
 		/* GENERAL */
 		void cleanup();
