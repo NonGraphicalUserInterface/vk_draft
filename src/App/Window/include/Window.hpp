@@ -3,10 +3,12 @@
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
 
+#include <Config/Config.hpp>
+
 namespace App {
 	class Window {
 	public:
-		Window();
+		Window(const Config::Config& config);
 		~Window();
 
 		Window(const Window&) = delete;

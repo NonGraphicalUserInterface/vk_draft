@@ -11,4 +11,5 @@ target_include_directories(Window PUBLIC
 target_link_libraries(Window PUBLIC
 	glfw
 	Vulkan::Vulkan
+	Config
 )

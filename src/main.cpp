@@ -1,11 +1,17 @@
 #include <iostream>
 #include <App/App.hpp>
+#include <Config/Config.hpp>
 
 int main() {
-	App::App app;
+	Config::Config config = {
+		.width = 800,
+		.height = 600,
+		.title = "Vulkan Draft App"
+	};
+
+	App::App app(config);
 
 	try {
-		std::cout << "running" << std::endl;
 		app.run();
 	}
 	catch (const std::exception& e) {

@@ -1,16 +1,19 @@
 add_library(VkCore
 	# Source
-	src/Instance.cpp
+	src/Context.cpp
 
 	# Header
-	include/VkCore/Instance.hpp
-)
+	include/VkCore/Context.hpp
+ )
 
 target_include_directories(VkCore PUBLIC
 	include
 )
 
+target_include_directories(VkCore PRIVATE include/VkCore)
+
 target_link_libraries(VkCore PUBLIC
 	Vulkan::Vulkan
 	glfw
+	Config
 )

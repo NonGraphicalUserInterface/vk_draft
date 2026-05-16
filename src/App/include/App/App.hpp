@@ -1,11 +1,12 @@
+#include <Config/Config.hpp>
 #include "Window.hpp"
 
-#include <VkCore/Instance.hpp>
+#include <VkCore/Context.hpp>
 
 namespace App {
 	class App {
 	public:
-		App() = default;
+		App(const Config::Config& config);
 		~App() = default;
 
 		App(const App&) = delete;
@@ -21,6 +22,6 @@ namespace App {
 		void cleanup();
 
 		Window window_;
-		VkCore::Instance instance_;
+		VkCore::Context context_;
 	};
 }

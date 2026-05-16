@@ -1,2 +1,3 @@
 Note that this is all for later stages; i.e. once we have got to the level where this would actually be necessary.
+-- Polish file structure for includes
 -- Implement "VkContext" (i.e. ordered struct containing the bare minimum for drawing sth)
