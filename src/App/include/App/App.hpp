@@ -1,5 +1,5 @@
 #include <Config/Config.hpp>
-#include "Window.hpp"
+#include <Window/Window.hpp>
 
 #include <VkCore/Context.hpp>
 
@@ -21,7 +21,7 @@ namespace App {
 		void mainLoop();
 		void cleanup();
 
-		Window window_;
+		Window::Window window_;
 		VkCore::Context context_;
 	};
 }

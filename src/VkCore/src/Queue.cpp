@@ -3,7 +3,7 @@
 #include <vector>
 
 namespace VkCore {
-	QueueFamilyIndices findQueueFamilies(VkPhysicalDevice device) {
+	QueueFamilyIndices findQueueFamilies(VkPhysicalDevice device, VkSurfaceKHR surface) {
 		QueueFamilyIndices indices{};
 
 		uint32_t queueFamilyCount = 0;
@@ -16,8 +16,15 @@ namespace VkCore {
 		for (int i = 0; i < queueFamilies.size(); i++) {
 			if (queueFamilies[i].queueFlags & VK_QUEUE_GRAPHICS_BIT) {
 				indices.graphicsFamily = i;
-				break;
 			}
+
+			VkBool32 presentSupport = false;
+			vkGetPhysicalDeviceSurfaceSupportKHR(device, i, surface, &presentSupport);
+			if (presentSupport) {
+				indices.presentFamily = i;
+			}
+
+			if (indices.isComplete()) break;
 		}
 
 		return indices;

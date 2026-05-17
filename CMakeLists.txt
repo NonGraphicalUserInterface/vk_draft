@@ -10,6 +10,7 @@ find_package(Vulkan REQUIRED)
 # Include sub-projects.
 add_subdirectory(third_party)
 add_subdirectory(src/Config)
+add_subdirectory(src/Window)
 add_subdirectory(src/VkCore)
 add_subdirectory(src/App)
 

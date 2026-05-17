@@ -1,2 +1,7 @@
 Note that this is all for later stages; i.e. once we have got to the level where this would actually be necessary.
+-- Multiple depth images, image views etc. needed!
+-- Mipmapping, array layers
 -- Separate more of VkContext into different classes?
+-- Swapchain: more capabilities + checks (HDR availability, etc.)
+-- Make separate Image class?
+-- Separate Context into different (lifecycle-coupled) classes

@@ -1,11 +1,11 @@
 #pragma once
 
-#define GLFW_INCLUDE_NONE
+#define GLFW_INCLUDE_VULKAN
 #include <GLFW/glfw3.h>
 
 #include <Config/Config.hpp>
 
-namespace App {
+namespace Window {
 	class Window {
 	public:
 		Window(const Config::Config& config);
@@ -17,6 +17,7 @@ namespace App {
 		Window& operator=(Window&&) = delete;
 
 		// Methods
+		inline GLFWwindow* getHandle() const { return window_; }
 		inline bool shouldClose() const { return glfwWindowShouldClose(window_); }
 		inline void pollEvents() const { glfwPollEvents(); }
 	private:

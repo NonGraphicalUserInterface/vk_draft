@@ -4,8 +4,6 @@ add_library(App
 	include/App/App.hpp
 )
 
-add_subdirectory(Window)
-
 target_include_directories(App PUBLIC
 	include
 )

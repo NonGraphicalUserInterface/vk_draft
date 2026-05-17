@@ -5,7 +5,7 @@
 namespace App {
 	App::App(const Config::Config& config) :
 		window_(config),
-		context_(&config)
+		context_(&window_, &config)
 	{
 		std::cout << "Initialised App" << std::endl;
 	}
